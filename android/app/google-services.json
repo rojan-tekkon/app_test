@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "790391844548",
+    "project_id": "mobx-app-test-tekkon",
+    "storage_bucket": "mobx-app-test-tekkon.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:790391844548:android:65f3a1efedb62a2602e391",
+        "android_client_info": {
+          "package_name": "com.example.bluetooth_test"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "790391844548-c17fvfjq941es3v58agps6i18oaicmgn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA8hP-nfwOS7dtnxKkpF2XIGoFbR1uW1ho"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "790391844548-c17fvfjq941es3v58agps6i18oaicmgn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,7 +1,6 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
 import 'package:geolocator/geolocator.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -12,20 +11,9 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final flutterReactiveBle = FlutterReactiveBle();
-
   @override
   void initState() {
     super.initState();
-    // scanDevices(context);
-  }
-
-  scanDevices(BuildContext context) {
-    flutterReactiveBle.scanForDevices(withServices: [], scanMode: ScanMode.lowLatency).listen(
-      (device) {
-        log("This is the devices: $device");
-      },
-    );
   }
 
   Future<Position> _determinePosition() async {
