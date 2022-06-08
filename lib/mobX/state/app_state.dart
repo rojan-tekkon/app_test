@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:bluetooth_test/mobX/state/auth_error.dart';
 import 'package:bluetooth_test/mobX/state/reminder.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -122,9 +124,11 @@ abstract class _AppState with Store {
     }
     final creationDate = DateTime.now();
     // final userId = user.uid;
+    log("THIS: $text: $userId");
+
     final firebaseReminder = await FirebaseFirestore.instance.collection(userId).add({
       _DocumentKeys.text: text,
-      _DocumentKeys.creationDate: creationDate,
+      _DocumentKeys.creationDate: creationDate.toIso8601String(),
       _DocumentKeys.isDone: false,
     });
 
@@ -198,12 +202,48 @@ abstract class _AppState with Store {
     this.reminders = ObservableList.of(reminders);
     return true;
   }
+
+  @action
+  Future<bool> _registerOrLogin(
+      {required LoginOrRegisterFunction fn, required String email, required String password}) async {
+    authError = null;
+    isLoading = true;
+    try {
+      await fn(email: email, password: password);
+      currentUser = FirebaseAuth.instance.currentUser;
+      await _loadReminders();
+      return true;
+    } on FirebaseAuthException catch (e) {
+      currentUser = null;
+      authError = AuthError.from(e);
+      return false;
+    } finally {
+      isLoading = false;
+      if (currentUser != null) {
+        currentScreen = AppScreen.reminders;
+      }
+    }
+  }
+
+  @action
+  Future<bool> register({required String email, required String password}) => _registerOrLogin(
+        fn: FirebaseAuth.instance.createUserWithEmailAndPassword,
+        email: email,
+        password: password,
+      );
+
+  @action
+  Future<bool> login({required String email, required String password}) => _registerOrLogin(
+        fn: FirebaseAuth.instance.signInWithEmailAndPassword,
+        email: email,
+        password: password,
+      );
 }
 
 abstract class _DocumentKeys {
-  static const String creationDate = 'creation_date';
-  static const String text = 'text';
-  static const String isDone = 'is_done';
+  static const creationDate = 'creation_date';
+  static const text = 'text';
+  static const isDone = 'is_done';
 }
 
 typedef LoginOrRegisterFunction = Future<UserCredential> Function({
