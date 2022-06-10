@@ -1,6 +1,8 @@
 import 'package:bluetooth_test/dialogs/show_auth_error.dart';
 import 'package:bluetooth_test/firebase_options.dart';
 import 'package:bluetooth_test/loading/loading_screen.dart';
+import 'package:bluetooth_test/mobX/provider/auth_provider.dart';
+import 'package:bluetooth_test/mobX/provider/reminders_provider.dart';
 import 'package:bluetooth_test/mobX/state/app_state.dart';
 import 'package:bluetooth_test/mobX/views/login_view.dart';
 import 'package:bluetooth_test/mobX/views/register_view.dart';
@@ -16,7 +18,10 @@ void main() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(
     Provider(
-      create: (_) => AppState()..initialize(),
+      create: (_) => AppState(
+        authProvider: FirebaseAuthProvider(),
+        remindersProvider: FirestoreRemindersProvider(),
+      )..initialize(),
       child: const MyApp(),
     ),
   );
