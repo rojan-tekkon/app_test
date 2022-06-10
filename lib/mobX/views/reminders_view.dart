@@ -59,7 +59,7 @@ class ReminderListView extends StatelessWidget {
                 controlAffinity: ListTileControlAffinity.leading,
                 value: reminder.isDone,
                 onChanged: (isDone) {
-                  context.read<AppState>().modify(reminder, isDone: isDone ?? false);
+                  context.read<AppState>().modifyReminder(reminderId: reminder.id, isDone: isDone ?? false);
                   reminder.isDone = isDone ?? false;
                 },
                 title: Row(
