@@ -1,5 +1,9 @@
 import 'package:bluetooth_test/extensions/if_debugging.dart';
+import 'package:bluetooth_test/home_screen.dart';
 import 'package:bluetooth_test/mobX/state/app_state.dart';
+import 'package:bluetooth_test/news_service.dart';
+import 'package:bluetooth_test/providers/news_change_notifier.dart';
+import 'package:bluetooth_test/utilities.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:provider/provider.dart';
@@ -50,6 +54,15 @@ class LoginView extends HookWidget {
                 context.read<AppState>().goto(AppScreen.register);
               },
               child: const Text("Not registered yet? Register here!"),
+            ),
+            OutlinedButton(
+              onPressed: () {
+                Utilities.openActivity(
+                    context,
+                    ChangeNotifierProvider(
+                        create: (_) => NewsChangeNotifier(NewsService()), child: const HomeScreen()));
+              },
+              child: const Text("GET HOME SCREEN"),
             ),
           ],
         ),

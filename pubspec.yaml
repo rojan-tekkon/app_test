@@ -47,9 +47,13 @@ dependencies:
   firebase_core: ^1.17.1
   firebase_auth: ^3.3.19
   cloud_firestore: ^3.1.17
+  shared_preferences: ^2.0.15
+  flutter_lorem: ^2.0.0
 
 dev_dependencies:
   flutter_test:
+    sdk: flutter
+  integration_test:
     sdk: flutter
 
   # The "flutter_lints" package below contains a set of recommended lints to
@@ -60,6 +64,8 @@ dev_dependencies:
   flutter_lints: ^1.0.0
   build_runner: ^2.1.11
   mobx_codegen: ^2.0.7
+  mocktail: ^0.3.0
+
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

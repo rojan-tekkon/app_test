@@ -1,7 +1,7 @@
-import 'dart:developer';
-
+import 'package:bluetooth_test/article_page.dart';
+import 'package:bluetooth_test/providers/news_change_notifier.dart';
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -14,60 +14,57 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-  }
-
-  Future<Position> _determinePosition() async {
-    bool serviceEnabled;
-    LocationPermission permission;
-
-    // Test if location services are enabled.
-    serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    log("Service: $serviceEnabled");
-    if (!serviceEnabled) {
-      return Future.error('Location services are disabled.');
-    }
-
-    permission = await Geolocator.checkPermission();
-    log("Permission: $permission");
-
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        return Future.error('Location permissions are denied');
-      }
-    }
-
-    if (permission == LocationPermission.deniedForever) {
-      return Future.error('Location permissions are permanently denied, we cannot request permissions.');
-    }
-
-    return await Geolocator.getCurrentPosition();
+    Future.microtask(
+      () => context.read<NewsChangeNotifier>().getArticles(),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Center(
-            child: ElevatedButton(
-              onPressed: () async {
-                // scanDevices(context);
-                final locationData = await _determinePosition();
-                log("Current Position: $locationData");
-              },
-              child: const Text("Get Location"),
+      appBar: AppBar(
+        title: const Text("News"),
+      ),
+      body: Consumer<NewsChangeNotifier>(
+        builder: (context, notifier, child) {
+          if (notifier.isLoading) {
+            return const Center(
+              child: CircularProgressIndicator(
+                key: Key("progress-indicator"),
+              ),
+            );
+          }
+          return ListView.builder(
+            itemCount: notifier.articles.length,
+            itemBuilder: (_, index) {
+              final article = notifier.articles[index];
+              return Card(
+                elevation: 2,
+                child: InkWell(
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => ArticlePage(article: article),
+                      ),
+                    );
+                  },
+                  child: ListTile(
+                    title: Text(article.title),
+                    subtitle: Text(
+                      article.content,
+                      maxLines: 4,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ),
+              );
+            },
+            padding: const EdgeInsets.symmetric(
+              horizontal: 8,
+              vertical: 16,
             ),
-          ),
-          // const SizedBox(height: 25),
-          // Center(
-          //   child: ElevatedButton(
-          //     onPressed: () {},
-          //     child: const Text("Stop devices"),
-          //   ),
-          // ),
-        ],
+          );
+        },
       ),
     );
   }
